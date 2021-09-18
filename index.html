@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Simple Project Manager</title>
+
+    <style>
+        .hide { /* KEEP THIS CLASS */
+            display:none;
+        }
+        .current { /* Make this do what you want */
+            background: magenta;
+        }
+        .error {
+            outline-color: red;
+            border: solid red 2px;
+        }
+        .good {
+            outline-color: green;
+            border: solid green 2px;
+        }
+    </style>
+
+</head>
+<body>
+<div id="wrapper">
+    <header>
+        <h1>Simple Project Manager</h1>
+    </header>
+
+    <div id="userSpace">
+        <section id="createAccount">
+            <h2>Create new user</h2>
+            <form id="createUserForm" action="" method="post">
+                <label>Username: <input type="text" name="User"></label>
+                <label>Password: <input type="password" name="Pass" id="Pass"></label>
+                <label>Confirm password: <input type="password" name="CPass" id="CPass"></label>
+                <input type="submit" value="Create User">
+            </form>
+            <script src="js/insert_user.js"></script>
+        </section>
+        <section id="login">
+            <h2>Log In</h2>
+            <form id="loginForm" action="" method="post">
+                <label>Username: <input type="text" name="User"></label>
+                <label>Password: <input type="password" name="Pass"></label>
+                <input type="submit" value="Login">
+            </form>
+            <script src="js/login.js"></script>
+        </section>
+    </div>
+
+    <div id="appSpace">
+        <section id="projectList">
+            <h2>Active Projects</h2>
+            <ul id="projectsNav">
+            </ul>
+            <script src="js/select_tasks.js"></script>
+            <script src="js/update_task.js"></script>
+            <script src="js/select_project_details.js"></script>
+            <script src="js/select_projects.js"></script>
+        </section>
+
+        <section id="addProject">
+            <h2>Add Project</h2>
+            <button id="addProjectBttn">New Project</button>
+            <!--Add Project Form-->
+            <form id="addProjectForm" action="" method="post">
+                <label>Title: <input type="text" name="Title"></label>
+                <label>Description: <textarea name="Description"></textarea></label>
+                <input type="submit" value="Add Project">
+            </form>
+            <script src="js/insert_project.js"></script>
+        </section>
+
+        <section id="projectDetails">
+            <h2 id="projectTitle">Project Title</h2>
+            <p id="projectDescription"></p>
+            <!--Labels-->
+            <p class="tcreated"></p>
+            <p class="description"></p>
+
+            <!--Control Buttons-->
+            <button id="archiveBttn">Archive</button>
+            <script src="js/update_project.js"></script>
+            <button id="addTaskBttn">New Task</button>
+
+            <!--Add Task Form-->
+            <form id="addTaskForm" action="" method="post">
+                <label>Description: <input type="text" name="Description"></label>
+                <label>Deadline: <input type="date" name="Deadline"></label>
+                <input type="submit" value="Add Task">
+            </form>
+            <script src="js/insert_task.js"></script>
+
+            <!--Tasks List-->
+            <h2>Tasks</h2>
+            <ul id="tasksList"></ul>
+        </section>
+    </div>
+</div><!--wrapper-->
+<script>
+    let resetUI = function() {
+        if (window.localStorage.getItem("PMUser")) {
+            document.getElementById("userSpace").classList.add("hide");
+            document.getElementById("appSpace").classList.remove("hide");
+
+            select_projects();
+
+            if (window.localStorage.getItem("PMProj")) {
+                document.getElementById("projectDetails").classList.remove("hide");
+                select_project_details(window.localStorage.getItem("PMProj"));
+            }
+            else {
+                document.getElementById("projectDetails").classList.add("hide");
+            }
+        }
+        else {
+            document.getElementById("userSpace").classList.remove("hide");
+            document.getElementById("appSpace").classList.add("hide");
+        }
+
+
+        ///Hide forms
+        document.getElementById("addProjectForm").classList.add("hide");
+        document.getElementById("addTaskForm").classList.add("hide");
+    };
+    resetUI();
+
+    //Control Buttons
+    //This needs to run only once, so it is outside of the restUI() function
+    document.getElementById("addProjectBttn").addEventListener("click", function() {
+        document.getElementById("addProjectForm").classList.toggle("hide");
+    });
+    document.getElementById("addTaskBttn").addEventListener("click", function() {
+        document.getElementById("addTaskForm").classList.toggle("hide");
+    });
+
+    //Confirm Pass
+    document.getElementById("CPass").addEventListener("input", function() {
+        if (document.getElementById("CPass").value != document.getElementById("Pass").value) {
+            document.getElementById("CPass").className = "error";
+        }
+        else {
+            document.getElementById("CPass").className = "good";
+        }
+    });
+
+
+</script>
+</body>
+</html>
